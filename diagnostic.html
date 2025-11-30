@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Diagnostic</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #0f0a1a;
+            color: #f1f5f9;
+        }
+        .check-item {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            background: #1a1025;
+        }
+        .success { border-left: 4px solid #10b981; }
+        .error { border-left: 4px solid #ef4444; }
+        .warning { border-left: 4px solid #f59e0b; }
+        pre {
+            background: #0a0514;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Dashboard Diagnostic Check</h1>
+    <div id="results"></div>
+
+    <script type="module">
+        const results = document.getElementById('results');
+        
+        function addResult(title, status, message) {
+            const div = document.createElement('div');
+            div.className = `check-item ${status}`;
+            div.innerHTML = `
+                <strong>${title}</strong>
+                <p>${message}</p>
+            `;
+            results.appendChild(div);
+        }
+
+        // Check 1: Local Storage
+        const currentUser = localStorage.getItem('currentUser');
+        if (currentUser) {
+            addResult('✅ User Session', 'success', `Logged in as: ${currentUser}`);
+        } else {
+            addResult('❌ User Session', 'error', 'No user logged in');
+        }
+
+        // Check 2: Supabase Connection
+        try {
+            const { supabase } = await import('./js/supabaseClient.js');
+            addResult('✅ Supabase Client', 'success', 'Supabase client loaded successfully');
+
+            // Check 3: Test Database Query
+            const { data: users, error: userError } = await supabase
+                .from('users')
+                .select('email')
+                .limit(1);
+
+            if (userError) {
+                addResult('❌ Database Query', 'error', `Error: ${userError.message}`);
+            } else {
+                addResult('✅ Database Query', 'success', `Connected! Found ${users ? users.length : 0} users`);
+            }
+
+            // Check 4: Courses Table
+            const { data: courses, error: courseError } = await supabase
+                .from('courses')
+                .select('id, title')
+                .limit(5);
+
+            if (courseError) {
+                addResult('❌ Courses Table', 'error', `Error: ${courseError.message}`);
+            } else {
+                addResult('✅ Courses Table', 'success', `Found ${courses ? courses.length : 0} courses`);
+                if (courses && courses.length > 0) {
+                    const list = courses.map(c => `- ${c.title}`).join('<br>');
+                    results.lastChild.innerHTML += `<pre>${list}</pre>`;
+                }
+            }
+
+            // Check 5: Enrollments
+            if (currentUser) {
+                const { data: enrollments, error: enrollError } = await supabase
+                    .from('enrollments')
+                    .select('course_id')
+                    .eq('user_email', currentUser);
+
+                if (enrollError) {
+                    addResult('⚠️ Enrollments', 'warning', `Error: ${enrollError.message}`);
+                } else {
+                    addResult('✅ Enrollments', 'success', `User enrolled in ${enrollments ? enrollments.length : 0} courses`);
+                }
+            }
+
+        } catch (error) {
+            addResult('❌ Module Loading', 'error', `Failed to load modules: ${error.message}`);
+        }
+
+        // Check 6: CSS Files
+        const cssFiles = [
+            'css/style.css',
+            'css/dashboard.css'
+        ];
+
+        for (const file of cssFiles) {
+            try {
+                const response = await fetch(file);
+                if (response.ok) {
+                    addResult(`✅ CSS: ${file}`, 'success', 'File loaded');
+                } else {
+                    addResult(`❌ CSS: ${file}`, 'error', `HTTP ${response.status}`);
+                }
+            } catch (error) {
+                addResult(`❌ CSS: ${file}`, 'error', error.message);
+            }
+        }
+
+        // Check 7: Dashboard.html
+        try {
+            const response = await fetch('dashboard.html');
+            if (response.ok) {
+                const html = await response.text();
+                const hasNav = html.includes('dashboard-nav');
+                const hasSidebar = html.includes('sidebar');
+                const hasContent = html.includes('main-content');
+                
+                if (hasNav && hasSidebar && hasContent) {
+                    addResult('✅ dashboard.html Structure', 'success', 'All required elements found');
+                } else {
+                    addResult('⚠️ dashboard.html Structure', 'warning', 
+                        `Missing: ${!hasNav ? 'nav ' : ''}${!hasSidebar ? 'sidebar ' : ''}${!hasContent ? 'content' : ''}`);
+                }
+            }
+        } catch (error) {
+            addResult('❌ dashboard.html', 'error', error.message);
+        }
+    </script>
+</body>
+</html>

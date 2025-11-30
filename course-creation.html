@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Course - SkillShare</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="assets/icons/icons.css">
+    <style>
+        /* Course Creation Specific Styles */
+        body {
+            background: var(--background-color);
+            min-height: 100vh;
+        }
+
+        .course-creation-container {
+            display: grid;
+            grid-template-columns: 350px 1fr 350px;
+            gap: 1.5rem;
+            padding: 2rem;
+            padding-top: calc(var(--header-height) + 2rem);
+            max-width: 1800px;
+            margin: 0 auto;
+            min-height: calc(100vh - var(--header-height));
+        }
+
+        /* Left Panel - Course Info */
+        .course-info-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: calc(var(--header-height) + 2rem);
+        }
+
+        .course-info-panel h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group-course {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group-course label {
+            display: block;
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group-course input,
+        .form-group-course select,
+        .form-group-course textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--surface-color);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group-course input:focus,
+        .form-group-course select:focus,
+        .form-group-course textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+        .form-group-course textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .course-thumbnail-upload {
+            margin-bottom: 1.5rem;
+        }
+
+        .thumbnail-preview-box {
+            width: 100%;
+            height: 150px;
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .thumbnail-preview-box:hover {
+            border-color: var(--primary-color);
+        }
+
+        .thumbnail-preview-box.has-image {
+            border-style: solid;
+        }
+
+        .thumbnail-preview-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .thumbnail-placeholder {
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .thumbnail-placeholder i {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .thumbnail-remove-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--error-color);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .course-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        /* Middle Panel - Video Preview */
+        .video-preview-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .video-preview-header h3 {
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .video-preview-container {
+            background: var(--surface-color);
+            border-radius: 8px;
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-preview-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .video-preview-placeholder {
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .video-preview-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .video-info-display {
+            padding: 1rem;
+            background: var(--surface-color);
+            border-radius: 8px;
+        }
+
+        .video-info-display h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Right Panel - Playlist */
+        .video-playlist-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: calc(var(--header-height) + 2rem);
+            max-height: calc(100vh - var(--header-height) - 4rem);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .playlist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .playlist-header h3 {
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+        }
+
+        .playlist-count {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .playlist-upload {
+            margin-bottom: 1rem;
+        }
+
+        .upload-zone {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 2rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--primary-color);
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .upload-zone i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .playlist-videos {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .playlist-video-item {
+            background: var(--surface-color);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .playlist-video-item:hover {
+            border-color: var(--primary-color);
+        }
+
+        .playlist-video-item.active {
+            border-color: var(--primary-color);
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .video-item-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .video-number {
+            width: 24px;
+            height: 24px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .video-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .video-name-input {
+            width: 100%;
+            padding: 0.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .video-item-actions {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .video-item-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .video-item-btn:hover {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .playlist-empty {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-secondary);
+        }
+
+        .playlist-empty i {
+            font-size: 2rem;
+            opacity: 0.5;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 1400px) {
+            .course-creation-container {
+                grid-template-columns: 300px 1fr 300px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .course-creation-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto;
+            }
+
+            .course-info-panel,
+            .video-playlist-panel {
+                position: static;
+                max-height: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Header -->
+    <nav class="dashboard-nav">
+        <div class="nav-brand">
+            <i class="fas fa-graduation-cap"></i>
+            <span>SkillShare</span>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-outline" id="backToDashboardBtn">
+                <i class="fas fa-arrow-left"></i>
+                Back to Dashboard
+            </button>
+        </div>
+    </nav>
+
+    <!-- Course Creation Container -->
+    <div class="course-creation-container">
+        <!-- LEFT PANEL - Course Info -->
+        <div class="course-info-panel">
+            <h3><i class="fas fa-info-circle"></i> Course Details</h3>
+            
+            <!-- Course Thumbnail Upload -->
+            <div class="course-thumbnail-upload">
+                <label style="color: var(--text-primary); font-weight: 500; margin-bottom: 0.5rem; display: block;">Course Thumbnail</label>
+                <div class="thumbnail-preview-box" id="courseThumbnailBox">
+                    <div class="thumbnail-placeholder">
+                        <i class="fas fa-image"></i>
+                        <p>Click to upload thumbnail</p>
+                        <small>(Optional, 16:9 recommended)</small>
+                    </div>
+                </div>
+                <input type="file" id="courseThumbnailInput" accept="image/*" style="display: none;">
+            </div>
+
+            <!-- Course Title -->
+            <div class="form-group-course">
+                <label for="courseTitle">Course Title *</label>
+                <input type="text" id="courseTitle" placeholder="Enter course title" required>
+            </div>
+
+            <!-- Course Category -->
+            <div class="form-group-course">
+                <label for="courseCategory">Category</label>
+                <select id="courseCategory">
+                    <option value="Web Development">Web Development</option>
+                    <option value="Data Science">Data Science</option>
+                    <option value="Design">Design</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="AI">AI</option>
+                    <option value="Mobile Development">Mobile Development</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Cloud Computing">Cloud Computing</option>
+                    <option value="Business">Business</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <!-- Course Description -->
+            <div class="form-group-course">
+                <label for="courseDescription">Description</label>
+                <textarea id="courseDescription" placeholder="What will students learn in this course?"></textarea>
+            </div>
+
+            <!-- Course Actions -->
+            <div class="course-actions">
+                <button class="btn-primary" id="saveCourseBtn">
+                    <i class="fas fa-save"></i>
+                    Save Course
+                </button>
+                <button class="btn-outline" id="cancelBtn">
+                    <i class="fas fa-times"></i>
+                    Cancel
+                </button>
+            </div>
+        </div>
+
+        <!-- MIDDLE PANEL - Video Player -->
+        <div class="video-preview-panel">
+            <div class="video-preview-header">
+                <h3>Video Preview</h3>
+            </div>
+            
+            <div class="video-preview-container" id="videoPreviewContainer">
+                <video id="videoPreview" controls style="display: none;">
+                    <source id="videoPreviewSource" src="" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                
+                <div class="video-preview-placeholder" id="videoPlaceholder">
+                    <i class="fas fa-play-circle"></i>
+                    <h3>No video selected</h3>
+                    <p>Upload and select a video from the playlist to preview</p>
+                </div>
+            </div>
+            
+            <div class="video-info-display" id="videoInfoDisplay">
+                <h4>Select a video to preview</h4>
+                <p><i class="fas fa-info-circle"></i> Video information will appear here</p>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL - Video Playlist -->
+        <div class="video-playlist-panel">
+            <div class="playlist-header">
+                <h3>
+                    <i class="fas fa-list"></i>
+                    Course Videos
+                </h3>
+                <span class="playlist-count" id="playlistCount">0</span>
+            </div>
+            
+            <div class="playlist-upload">
+                <div class="upload-zone" id="uploadZone">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p><strong>Click to upload</strong> or drag videos here</p>
+                    <small>MP4, MOV, AVI • Max 100MB per video</small>
+                </div>
+                <input type="file" id="videoInput" accept="video/*" multiple style="display: none;">
+            </div>
+            
+            <div class="playlist-videos" id="playlistVideos">
+                <div class="playlist-empty">
+                    <i class="fas fa-video-slash"></i>
+                    <p>No videos yet</p>
+                    <small>Upload videos to get started</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/supabaseClient.js"></script>
+    <script type="module" src="js/course-creation.js"></script>
+</body>
+</html>

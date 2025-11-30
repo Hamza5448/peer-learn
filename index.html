@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillShare - Peer Learning Platform</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="assets/icons/icons.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <span class="fas fa-graduation-cap"></span>
+                <span>SkillShare</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#about">About</a>
+                <button class="btn-outline" id="loginBtn">Login</button>
+                <button class="btn-primary" id="signupBtn">Sign Up</button>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Learn Together, Grow Together</h1>
+                <p>Join our community of learners and educators. Share knowledge, collaborate, and advance your skills in a free, open learning environment.</p>
+                <div class="hero-buttons">
+                    <button class="btn-primary large" id="heroSignupBtn">Start Learning Free</button>
+                    <button class="btn-secondary large" id="heroFeaturesBtn">Explore Features</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="floating-card">
+                    <span class="fas fa-users" style="font-size:3rem;color:var(--primary-light)"></span>
+                    <h3>Community Learning</h3>
+                    <p>Connect with peers worldwide</p>
+                </div>
+                <div class="floating-card">
+                    <span class="fas fa-chart-line" style="font-size:3rem;color:var(--primary-light)"></span>
+                    <h3>Track Progress</h3>
+                    <p>Monitor your learning journey</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <h2>Why Choose SkillShare?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="fas fa-video" style="font-size:3rem;color:var(--primary-light);display:block;margin-bottom:1rem"></span>
+                    <h3>Interactive Courses</h3>
+                    <p>Engage with video lessons, quizzes, and hands-on projects</p>
+                </div>
+                <div class="feature-card">
+                    <span class="fas fa-chart-pie" style="font-size:3rem;color:var(--primary-light);display:block;margin-bottom:1rem"></span>
+                    <h3>Progress Tracking</h3>
+                    <p>Visualize your learning with detailed analytics and charts</p>
+                </div>
+                <div class="feature-card">
+                    <span class="fas fa-star" style="font-size:3rem;color:var(--primary-light);display:block;margin-bottom:1rem"></span>
+                    <h3>Rating System</h3>
+                    <p>Rate courses and help improve the learning experience</p>
+                </div>
+                <div class="feature-card">
+                    <span class="fas fa-comments" style="font-size:3rem;color:var(--primary-light);display:block;margin-bottom:1rem"></span>
+                    <h3>Peer Reviews</h3>
+                    <p>Get feedback from both students and instructors</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="loginModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Welcome Back</h2>
+                <button class="close-btn" id="closeLoginModal">&times;</button>
+            </div>
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <div class="password-input-container">
+                        <input type="password" id="loginPassword" required placeholder="Enter your password">
+                        <button type="button" class="toggle-password" id="toggleLoginPassword">
+                            <span class="fas fa-eye"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-options">
+                    <label class="checkbox">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+                <button type="submit" class="btn-primary full-width">Login</button>
+            </form>
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="#" id="switchToSignup">Sign up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="signupModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Join SkillShare</h2>
+                <button class="close-btn" id="closeSignupModal">&times;</button>
+            </div>
+            <form id="signupForm" class="auth-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" required minlength="2" placeholder="Enter your first name">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" required minlength="2" placeholder="Enter your last name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email Address</label>
+                    <input type="email" id="signupEmail" required placeholder="your.email@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <div class="password-input-container">
+                        <input type="password" id="signupPassword" required placeholder="Create a strong password">
+                        <button type="button" class="toggle-password" id="toggleSignupPassword">
+                            <span class="fas fa-eye"></span>
+                        </button>
+                    </div>
+                    <div class="password-requirements">
+                        <p>Password must contain:</p>
+                        <ul>
+                            <li id="req-length">At least 8 characters</li>
+                            <li id="req-number">One number</li>
+                            <li id="req-symbol">One special character</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <div class="password-input-container">
+                        <input type="password" id="confirmPassword" required placeholder="Re-enter your password">
+                        <button type="button" class="toggle-password" id="toggleConfirmPassword">
+                            <span class="fas fa-eye"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="userType">I am a:</label>
+                    <select id="userType" required>
+                        <option value="">Select role</option>
+                        <option value="student">Student</option>
+                        <option value="teacher">Teacher</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary full-width">Create Account</button>
+            </form>
+            <div class="auth-footer">
+                <p>Already have an account? <a href="#" id="switchToLogin">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/supabaseClient.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/utils.js"></script>
+    <script type="module">
+        // Initialize modal controls
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginBtn = document.getElementById('loginBtn');
+            const signupBtn = document.getElementById('signupBtn');
+            const heroSignupBtn = document.getElementById('heroSignupBtn');
+            const heroFeaturesBtn = document.getElementById('heroFeaturesBtn');
+            const closeLoginModal = document.getElementById('closeLoginModal');
+            const closeSignupModal = document.getElementById('closeSignupModal');
+            const switchToSignup = document.getElementById('switchToSignup');
+            const switchToLogin = document.getElementById('switchToLogin');
+            
+            const loginModal = document.getElementById('loginModal');
+            const signupModal = document.getElementById('signupModal');
+            
+            // Show login modal
+            function showLogin() {
+                loginModal.classList.remove('hidden');
+                signupModal.classList.add('hidden');
+            }
+            
+            // Show signup modal
+            function showSignup() {
+                signupModal.classList.remove('hidden');
+                loginModal.classList.add('hidden');
+            }
+            
+            // Close modals
+            function closeModals() {
+                loginModal.classList.add('hidden');
+                signupModal.classList.add('hidden');
+            }
+            
+            // Scroll to features
+            function scrollToFeatures() {
+                document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // Event listeners
+            loginBtn.addEventListener('click', showLogin);
+            signupBtn.addEventListener('click', showSignup);
+            heroSignupBtn.addEventListener('click', showSignup);
+            heroFeaturesBtn.addEventListener('click', scrollToFeatures);
+            closeLoginModal.addEventListener('click', closeModals);
+            closeSignupModal.addEventListener('click', closeModals);
+            switchToSignup.addEventListener('click', (e) => {
+                e.preventDefault();
+                showSignup();
+            });
+            switchToLogin.addEventListener('click', (e) => {
+                e.preventDefault();
+                showLogin();
+            });
+            
+            // Close modal when clicking outside
+            loginModal.addEventListener('click', (e) => {
+                if (e.target === loginModal) closeModals();
+            });
+            signupModal.addEventListener('click', (e) => {
+                if (e.target === signupModal) closeModals();
+            });
+            
+            // Password toggle functionality
+            document.getElementById('toggleLoginPassword').addEventListener('click', function() {
+                const input = document.getElementById('loginPassword');
+                const icon = this.querySelector('span');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.className = 'fas fa-eye-slash';
+                } else {
+                    input.type = 'password';
+                    icon.className = 'fas fa-eye';
+                }
+            });
+            
+            document.getElementById('toggleSignupPassword').addEventListener('click', function() {
+                const input = document.getElementById('signupPassword');
+                const icon = this.querySelector('span');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.className = 'fas fa-eye-slash';
+                } else {
+                    input.type = 'password';
+                    icon.className = 'fas fa-eye';
+                }
+            });
+            
+            document.getElementById('toggleConfirmPassword').addEventListener('click', function() {
+                const input = document.getElementById('confirmPassword');
+                const icon = this.querySelector('span');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.className = 'fas fa-eye-slash';
+                } else {
+                    input.type = 'password';
+                    icon.className = 'fas fa-eye';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

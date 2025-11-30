@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Player - SkillShare</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/video-player.css">
+    <link rel="stylesheet" href="css/rating.css">
+    <link rel="stylesheet" href="css/reviews.css">
+    <link rel="stylesheet" href="assets/icons/icons.css">
+</head>
+<body>
+    <nav class="dashboard-nav">
+        <div class="nav-brand">
+            <span class="fas fa-graduation-cap"></span>
+            <span>SkillShare</span>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-outline" onclick="history.back()">
+                <span class="fas fa-arrow-left"></span>
+                Back to Dashboard
+            </button>
+            <div class="user-menu">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <div class="user-info">
+                    <span class="user-name" id="userName">User</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="video-player-container">
+        <div class="video-main-section">
+            <div class="video-player-wrapper" id="videoPlayerWrapper">
+                <video id="videoPlayer" controls>
+                    <source id="videoSource" src="" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <button class="fullscreen-btn" id="fullscreenBtn" onclick="window.toggleFullscreen()">
+                    <span class="fas fa-expand"></span>
+                    <span>Fullscreen</span>
+                </button>
+                <div class="video-progress-overlay" id="progressOverlay">
+                    <div class="progress-heatmap" id="progressHeatmap"></div>
+                </div>
+            </div>
+            
+            <div class="video-info-section">
+                <h1 id="videoTitle">Video Title</h1>
+                <div class="video-meta">
+                    <span id="courseTitle">Course Name</span>
+                    <span>-</span>
+                    <span id="videoNumber">Video 1</span>
+                    <span>-</span>
+                    <span id="watchProgress">Progress: 0%</span>
+                </div>
+                <div class="auto-save-indicator" id="autoSaveIndicator">
+                    <span class="fas fa-save"></span>
+                    <span>Auto-saving every 10 seconds</span>
+                </div>
+            </div>
+
+            <div class="comments-reviews-container">
+                <div class="comments-section">
+                    <h3><span class="fas fa-comments"></span> Comments (<span id="commentCount">0</span>)</h3>
+                    
+                    <div class="add-comment" id="addCommentSection">
+                        <div class="comment-avatar" id="commentAvatar">U</div>
+                        <div class="comment-input-wrapper">
+                            <textarea id="commentInput" placeholder="Add a comment..."></textarea>
+                            <div class="comment-actions">
+                                <button class="btn-outline" onclick="videoPlayer.cancelComment()">Cancel</button>
+                                <button class="btn-primary" onclick="videoPlayer.postComment()">Comment</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="comments-list" id="commentsList">
+                    </div>
+                </div>
+
+                <div class="reviews-section">
+                    <h3><span class="fas fa-star"></span> Reviews (<span id="reviewCount">0</span>)</h3>
+                    
+                    <div class="add-review" id="addReviewSection">
+                        <h4>Write a Review</h4>
+                        <p id="ratingEligibility" class="rating-eligibility">Watch at least 50% of the course to leave a rating</p>
+                        <div class="review-rating-input">
+                            <label>Rating:</label>
+                            <div class="star-rating">
+                                <span class="star-btn" data-rating="1">&#9733;</span>
+                                <span class="star-btn" data-rating="2">&#9733;</span>
+                                <span class="star-btn" data-rating="3">&#9733;</span>
+                                <span class="star-btn" data-rating="4">&#9733;</span>
+                                <span class="star-btn" data-rating="5">&#9733;</span>
+                            </div>
+                            <span id="selectedRating">0</span>/5
+                        </div>
+                        <textarea id="reviewInput" placeholder="Share your thoughts about this course..."></textarea>
+                        <div class="review-actions">
+                            <button class="btn-primary" onclick="videoPlayer.postReview()" id="submitReviewBtn">
+                                <span class="fas fa-paper-plane"></span>
+                                Submit Review
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="reviews-list" id="reviewsList">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="course-sidebar">
+            <div class="sidebar-header">
+                <h3>Course Content</h3>
+                <span id="courseProgress">0%</span>
+            </div>
+            
+            <div class="videos-list" id="courseVideosList">
+            </div>
+        </div>
+    </div>
+
+    <!-- DEBUG BUTTON - Temporary -->
+    <button onclick="debugVideoData()" style="position: fixed; bottom: 20px; left: 20px; z-index: 9999; padding: 10px; background: red; color: white; border-radius: 8px; cursor: pointer;">
+        🔍 Debug Video
+    </button>
+
+    <script>
+    function debugVideoData() {
+        if (!window.videoPlayer || !window.videoPlayer.course) {
+            console.log('❌ No course loaded');
+            alert('No course loaded');
+            return;
+        }
+        
+        const videos = window.videoPlayer.course.videos;
+        console.log('📊 DEBUG INFO:');
+        console.log('Total videos:', videos.length);
+        
+        videos.forEach((video, i) => {
+            console.log(`\nVideo ${i + 1}:`);
+            console.log('  Name:', video.name);
+            console.log('  ID:', video.id);
+            console.log('  Has video_data?', !!video.video_data);
+            console.log('  video_data length:', video.video_data ? video.video_data.length : 0);
+            console.log('  video_data preview:', video.video_data ? video.video_data.substring(0, 100) : 'NONE');
+            console.log('  Duration:', video.duration_seconds);
+        });
+        
+        alert('Check console for debug info');
+    }
+    </script>
+
+    <script type="module" src="js/supabaseClient.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/utils.js"></script>
+    <script type="module" src="js/video-player.js"></script>
+</body>
+</html>

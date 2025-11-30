@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillShare - Student Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="assets/icons/icons.css">
+</head>
+<body>
+    <nav class="dashboard-nav">
+        <div class="nav-brand">
+            <span class="fas fa-graduation-cap"></span>
+            <span>SkillShare</span>
+        </div>
+        <div class="nav-actions">
+            <div class="search-bar">
+                <span class="fas fa-search" style="position:absolute;left:1rem;color:var(--text-secondary)"></span>
+                <input type="text" placeholder="Search courses, teachers..." id="globalSearch">
+            </div>
+            <div class="user-menu" id="userMenuBtn">
+                <div class="user-avatar" id="userAvatar">SC</div>
+                <div class="user-info">
+                    <span class="user-name" id="userName">Student User</span>
+                    <span class="user-role">Student</span>
+                </div>
+                <div class="dropdown-menu hidden" id="userDropdown">
+                    <a href="#" data-page="profile"><span class="fas fa-user"></span> Profile</a>
+                    <a href="#" data-page="settings"><span class="fas fa-cog"></span> Settings</a>
+                    <a href="#" data-page="messages"><span class="fas fa-envelope"></span> Messages</a>
+                    <div class="divider"></div>
+                    <a href="#" id="logoutBtn"><span class="fas fa-sign-out-alt"></span> Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h3>Main Menu</h3>
+                <ul class="sidebar-menu">
+                    <li class="active" data-page="dashboard">
+                        <span class="fas fa-home"></span>
+                        <span>Dashboard</span>
+                    </li>
+                    <li id="discoverBtn">
+                        <span class="fas fa-compass"></span>
+                        <span>Discover</span>
+                    </li>
+                    <li data-page="my-courses">
+                        <span class="fas fa-book-open"></span>
+                        <span>My Courses</span>
+                    </li>
+                    <li data-page="progress">
+                        <span class="fas fa-chart-line"></span>
+                        <span>Progress</span>
+                    </li>
+                    <li data-page="messages">
+                        <span class="fas fa-envelope"></span>
+                        <span>Messages</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>My Courses</h3>
+                <ul class="sidebar-menu" id="enrolledCoursesSidebar">
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Account</h3>
+                <ul class="sidebar-menu">
+                    <li data-page="profile">
+                        <span class="fas fa-user"></span>
+                        <span>Profile</span>
+                    </li>
+                    <li data-page="settings">
+                        <span class="fas fa-cog"></span>
+                        <span>Settings</span>
+                    </li>
+                    <li id="sidebarLogoutBtn">
+                        <span class="fas fa-sign-out-alt"></span>
+                        <span>Logout</span>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div id="dashboard-page" class="page-content active">
+                <section class="welcome-section">
+                    <div class="welcome-content">
+                        <h1>Welcome back, <span id="welcomeUserName">Student</span>!</h1>
+                        <p>Continue your learning journey where you left off</p>
+                    </div>
+                    <div class="welcome-stats">
+                        <div class="stat-card">
+                            <span class="fas fa-play-circle" style="font-size:2rem;color:var(--primary-color)"></span>
+                            <div class="stat-info">
+                                <span class="stat-number" id="activeCourses">0</span>
+                                <span class="stat-label">Active Courses</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="fas fa-clock" style="font-size:2rem;color:var(--primary-color)"></span>
+                            <div class="stat-info">
+                                <span class="stat-number" id="studyTime">0h</span>
+                                <span class="stat-label">Study Time</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="fas fa-trophy" style="font-size:2rem;color:var(--primary-color)"></span>
+                            <div class="stat-info">
+                                <span class="stat-number" id="completed">0</span>
+                                <span class="stat-label">Completed</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <div class="section-header">
+                        <h2>Continue Learning</h2>
+                        <a href="#" class="view-all" id="viewAllMyCoursesLink">View All</a>
+                    </div>
+                    <div class="courses-grid" id="continueLearningGrid">
+                    </div>
+                </section>
+
+                <section class="section">
+                    <div class="section-header">
+                        <h2>Recommended For You</h2>
+                        <a href="#" class="view-all" id="browseAllLink">Browse All</a>
+                    </div>
+                    <div class="courses-grid" id="recommendedCoursesGrid">
+                    </div>
+                </section>
+            </div>
+
+            <div id="my-courses-page" class="page-content hidden">
+                <div class="page-header">
+                    <h1>My Courses</h1>
+                    <p>Manage your enrolled courses and track progress</p>
+                </div>
+                <div class="courses-grid" id="myCoursesContainer">
+                </div>
+            </div>
+
+            <div id="progress-page" class="page-content hidden">
+                <div class="page-header">
+                    <h1>Learning Progress</h1>
+                    <p>Track your learning journey and achievements</p>
+                </div>
+                <div class="progress-grid">
+                    <div class="progress-card">
+                        <h3>Overall Progress</h3>
+                        <canvas id="progressChart" width="400" height="200"></canvas>
+                    </div>
+                    <div class="progress-card">
+                        <h3>Statistics</h3>
+                        <div class="progress-stats">
+                            <div class="stat-item">
+                                <span class="stat-value" id="totalWatchTime">0</span>
+                                <span class="stat-label">Hours Watched</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" id="coursesInProgress">0</span>
+                                <span class="stat-label">Courses In Progress</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" id="coursesCompleted">0</span>
+                                <span class="stat-label">Courses Completed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="messages-page" class="page-content hidden">
+                <div class="page-header">
+                    <h1>Messages</h1>
+                    <p>Communicate with instructors and peers</p>
+                </div>
+                <div class="coming-soon">
+                    <i class="fas fa-envelope"></i>
+                    <h2>Messages Coming Soon</h2>
+                    <p>Chat with teachers and fellow students</p>
+                </div>
+            </div>
+
+            <div id="profile-page" class="page-content hidden">
+                <div class="page-header">
+                    <h1>My Profile</h1>
+                    <p>Manage your personal information and avatar</p>
+                </div>
+
+                <div class="profile-container" style="max-width: 800px; margin: 0 auto;">
+                    <div class="settings-card">
+                        <h3>Profile Information</h3>
+                        
+                        <form id="profileForm" class="auth-form">
+                            <div class="form-group" style="text-align: center; margin-bottom: 2rem;">
+                                <label style="display: block; margin-bottom: 1rem;">Profile Picture</label>
+                                <div id="avatarPreview" class="avatar avatar-xl" style="width: 120px; height: 120px; margin: 0 auto 1rem; cursor: pointer; position: relative; overflow: hidden;">
+                                    U
+                                </div>
+                                <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                                <button type="button" class="btn-outline" onclick="document.getElementById('avatarInput').click()">
+                                    <i class="fas fa-camera"></i>
+                                    Change Avatar
+                                </button>
+                                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem;">
+                                    Click avatar or button to upload. Max 2MB.
+                                </p>
+                            </div>
+
+                            <div class="divider"></div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="profileFirstName">First Name *</label>
+                                    <input type="text" id="profileFirstName" required minlength="2" placeholder="Enter first name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileLastName">Last Name *</label>
+                                    <input type="text" id="profileLastName" required minlength="2" placeholder="Enter last name">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="profileEmail">Email Address</label>
+                                <input type="email" id="profileEmail" disabled style="background: var(--surface-color); cursor: not-allowed;">
+                                <small style="color: var(--text-secondary); font-size: 0.85rem;">Email cannot be changed</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="profileBio">Bio (Optional)</label>
+                                <textarea id="profileBio" placeholder="Tell us about yourself..." style="min-height: 120px; resize: vertical;"></textarea>
+                                <small style="color: var(--text-secondary); font-size: 0.85rem;">
+                                    Share a bit about your background, interests, or learning goals
+                                </small>
+                            </div>
+
+                            <button type="submit" class="btn-primary full-width">
+                                <i class="fas fa-save"></i>
+                                Update Profile
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div id="settings-page" class="page-content hidden">
+                <div class="page-header">
+                    <h1>Settings</h1>
+                    <p>Manage your account preferences and security</p>
+                </div>
+
+                <div class="settings-container" style="max-width: 900px; margin: 0 auto;">
+                    
+                    <div class="settings-card">
+                        <h3>
+                            <i class="fas fa-bell"></i>
+                            Notification Preferences
+                        </h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                            Choose what notifications you want to receive
+                        </p>
+                        
+                        <form id="settingsForm">
+                            <div class="form-group">
+                                <label class="checkbox" style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; padding: 1rem; background: var(--surface-color); border-radius: 8px; margin-bottom: 1rem;">
+                                    <input type="checkbox" id="emailUpdates" style="width: 20px; height: 20px; cursor: pointer;">
+                                    <div>
+                                        <strong style="display: block; color: var(--text-primary);">Email Updates</strong>
+                                        <small style="color: var(--text-secondary);">Receive updates about your account via email</small>
+                                    </div>
+                                </label>
+
+                                <label class="checkbox" style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; padding: 1rem; background: var(--surface-color); border-radius: 8px; margin-bottom: 1rem;">
+                                    <input type="checkbox" id="courseUpdates" style="width: 20px; height: 20px; cursor: pointer;">
+                                    <div>
+                                        <strong style="display: block; color: var(--text-primary);">Course Updates</strong>
+                                        <small style="color: var(--text-secondary);">Get notified about new content in your courses</small>
+                                    </div>
+                                </label>
+
+                                <label class="checkbox" style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; padding: 1rem; background: var(--surface-color); border-radius: 8px;">
+                                    <input type="checkbox" id="messageAlerts" style="width: 20px; height: 20px; cursor: pointer;">
+                                    <div>
+                                        <strong style="display: block; color: var(--text-primary);">Message Alerts</strong>
+                                        <small style="color: var(--text-secondary);">Receive notifications for new messages</small>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn-primary full-width">
+                                <i class="fas fa-save"></i>
+                                Save Preferences
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>
+                            <i class="fas fa-lock"></i>
+                            Change Password
+                        </h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                            Update your password to keep your account secure
+                        </p>
+
+                        <form id="passwordForm" class="auth-form">
+                            <div class="form-group">
+                                <label for="currentPassword">Current Password *</label>
+                                <div class="password-input-container">
+                                    <input type="password" id="currentPassword" required placeholder="Enter current password">
+                                    <button type="button" class="toggle-password">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="newPassword">New Password *</label>
+                                <div class="password-input-container">
+                                    <input type="password" id="newPassword" required minlength="3" placeholder="Enter new password">
+                                    <button type="button" class="toggle-password">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <small style="color: var(--text-secondary); font-size: 0.85rem;">
+                                    Password must be at least 3 characters
+                                </small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm New Password *</label>
+                                <div class="password-input-container">
+                                    <input type="password" id="confirmPassword" required minlength="3" placeholder="Confirm new password">
+                                    <button type="button" class="toggle-password">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-primary full-width">
+                                <i class="fas fa-key"></i>
+                                Change Password
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>
+                            <i class="fas fa-info-circle"></i>
+                            Account Information
+                        </h3>
+                        
+                        <div style="padding: 1rem; background: var(--surface-color); border-radius: 8px; margin-top: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
+                                <span style="color: var(--text-secondary);">Account Type:</span>
+                                <span style="color: var(--text-primary); font-weight: 600;" id="accountType">Student</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
+                                <span style="color: var(--text-secondary);">Email:</span>
+                                <span style="color: var(--text-primary);" id="accountEmail">-</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-secondary);">Member Since:</span>
+                                <span style="color: var(--text-primary);" id="memberSince">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="courseModal" class="modal hidden">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2 id="courseModalTitle">Course Details</h2>
+                <button class="close-btn" id="closeCourseModalBtn">&times;</button>
+            </div>
+            <div class="modal-body" id="courseModalContent">
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/supabaseClient.js"></script>
+    <script type="module" src="js/dashboard.js"></script>
+    <script type="module" src="js/profile-settings.js"></script>
+    <script type="module" src="js/search.js"></script>
+</body>
+</html>
